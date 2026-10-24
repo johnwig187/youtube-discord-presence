@@ -1,0 +1,27 @@
+# Local pairing/configuration and runtime locations
+config.json
+config.*.json
+!config.example.json
+runtime.txt
+.env
+.env.*
+!.env.example
+*.dpapi.json
+*credentials*.json
+*webhook*.json
+
+# Dependencies, logs, generated packages and captures
+node_modules/
+*.log
+logs/
+coverage/
+dist/
+artifacts/
+screenshots/
+*.zip
+*.bak
+*.tmp
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
