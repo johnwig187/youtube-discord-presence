@@ -2,6 +2,12 @@
 
 Lethal's YouTube bot shares the video currently playing in Brave as a Discord **Listening** activity, with its title, channel or artist, artwork, watch link, and elapsed/remaining time. It supports YouTube watch pages, the active YouTube mini-player while browsing playlists, and YouTube Music.
 
+![Lethal187 — Hush Connect CEO](assets/hush-ceo-banner.webp)
+
+## A project in development
+
+Hush Connect is in development. It is still being built, and we look forward to sharing more when it is ready.
+
 This repository is a development copy. The existing installed extension and AlwaysUp service continue to use their original location. Preparing this repository does not move, re-pair, or restart that installation.
 
 ## Requirements
