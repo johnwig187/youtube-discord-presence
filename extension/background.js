@@ -1,7 +1,7 @@
 chrome.action.onClicked.addListener(() => chrome.runtime.openOptionsPage());
 chrome.runtime.onInstalled.addListener(() => chrome.runtime.openOptionsPage());
 chrome.runtime.onMessage.addListener((message, sender, reply) => {
-  if (message.kind !== 'playback' || !sender.tab || !sender.url?.startsWith('https://www.youtube.com/')) return;
+  if (message.kind !== 'playback' || !sender.tab || !/^https:\/\/(www|music)\.youtube\.com\//.test(sender.url || '')) return;
   (async () => {
     const {token, enabled = true} = await chrome.storage.local.get(['token', 'enabled']);
     if (!token) return {error: 'Open extension options to pair the bridge.'};

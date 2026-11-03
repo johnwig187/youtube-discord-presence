@@ -1,6 +1,6 @@
 # YouTube Discord Presence
 
-Lethal's YouTube bot shares the video currently playing in Brave as a Discord **Listening** activity, with the title, channel, artwork, watch link, and elapsed/remaining time. It supports regular YouTube watch pages and the active mini-player while browsing playlists.
+Lethal's YouTube bot shares the video currently playing in Brave as a Discord **Listening** activity, with its title, channel or artist, artwork, watch link, and elapsed/remaining time. It supports YouTube watch pages, the active YouTube mini-player while browsing playlists, and YouTube Music.
 
 This repository is a development copy. The existing installed extension and AlwaysUp service continue to use their original location. Preparing this repository does not move, re-pair, or restart that installation.
 
@@ -19,7 +19,7 @@ Do not run a second bridge beside an existing installation: both use port 32145.
 3. Start Discord desktop, then run `Start.cmd`.
 4. Open `brave://extensions`, enable Developer mode, choose **Load unpacked**, and select this repository's `extension` folder.
 5. Open the extension options, paste the locally generated pairing code, enable **Share playing videos**, and select **Save and check connection**.
-6. Refresh an already-open YouTube tab once, then play a video and check your Discord profile.
+6. Refresh already-open YouTube or YouTube Music tabs once, then play a video or track and check your Discord profile.
 
 `bridge/config.example.json` documents the local configuration shape. Real `bridge/config.json` and `runtime.txt` are generated locally and ignored by Git.
 
@@ -35,7 +35,7 @@ Run `npm test` for the six focused playback, timestamp, RPC, and authenticated l
 
 | Location | Purpose |
 | --- | --- |
-| `extension/player.js` | Reads active YouTube player metadata in the page world |
+| `extension/player.js` | Reads active YouTube and YouTube Music player metadata in the page world |
 | `extension/content.js` | Validates and forwards playback snapshots |
 | `extension/background.js` | Sends paired updates to the local bridge |
 | `extension/options.*` | Local pairing and sharing controls |
@@ -48,7 +48,7 @@ Run `npm test` for the six focused playback, timestamp, RPC, and authenticated l
 
 - Pausing, ads, or closing YouTube clears the activity after the stale-playback window, normally within about 20 seconds.
 - Separate Discord application IDs allow music to coexist with other activities. This bridge does not suppress music while a Kick stream is live. Discord controls which activity appears first.
-- Incognito is excluded by default. Only `https://www.youtube.com/` is supported; YouTube Music is not currently covered.
+- Incognito is excluded by default. Supported sites are `https://www.youtube.com/` and `https://music.youtube.com/` in desktop Brave. This does not add iPhone reporting; iOS Brave cannot load this desktop extension.
 - The bridge listens only on `127.0.0.1:32145`, requires the local pairing code, and rejects ordinary website origins. That code is a local secret, not a Discord credential.
 - Sharing makes the playing title and channel visible to people who can view your Discord activity.
 

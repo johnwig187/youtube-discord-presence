@@ -17,11 +17,14 @@
       chrome.runtime.sendMessage({kind: 'playback', ...playerSnapshot}).catch(() => {});
       return;
     }
+    const music = location.hostname === 'music.youtube.com';
     const video = document.querySelector('video');
     const id = new URL(location.href).searchParams.get('v');
-    const playing = location.pathname === '/watch' && /^[\w-]{11}$/.test(id || '') && video && !video.paused && !video.ended && video.readyState >= 2 && !document.querySelector('.html5-video-player.ad-showing');
-    const title = document.querySelector('ytd-watch-metadata h1 yt-formatted-string')?.textContent?.trim() || document.title.replace(/ - YouTube$/, '');
-    const channel = document.querySelector('ytd-watch-metadata #channel-name a')?.textContent?.trim() || 'YouTube';
+    const musicTitle = document.querySelector('.title.ytmusic-player-bar')?.textContent?.trim();
+    const musicArtist = document.querySelector('.subtitle.ytmusic-player-bar')?.textContent?.trim();
+    const playing = (music || location.pathname === '/watch') && /^[\w-]{11}$/.test(id || '') && video && !video.paused && !video.ended && video.readyState >= 2 && !document.querySelector('.html5-video-player.ad-showing');
+    const title = (music && musicTitle) || document.querySelector('ytd-watch-metadata h1 yt-formatted-string')?.textContent?.trim() || document.title.replace(/ - YouTube( Music)?$/, '');
+    const channel = (music && musicArtist) || document.querySelector('ytd-watch-metadata #channel-name a')?.textContent?.trim() || (music ? 'YouTube Music' : 'YouTube');
     chrome.runtime.sendMessage({kind: 'playback', playing: !!playing, id, title, channel, position: video?.currentTime || 0, duration: Number.isFinite(video?.duration) ? video.duration : 0, rate: video?.playbackRate || 1}).catch(() => {});
   }
   setInterval(report, 5000);

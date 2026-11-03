@@ -1,15 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Lethal's YouTube bot",
-  "version": "1.2.0",
-  "description": "Share currently playing YouTube videos with your local Discord bridge.",
+  "version": "1.3.0",
+  "description": "Share currently playing YouTube and YouTube Music tracks with your local Discord bridge.",
   "permissions": ["storage"],
   "host_permissions": ["http://127.0.0.1:32145/*"],
   "background": {"service_worker": "background.js"},
   "options_page": "options.html",
   "action": {"default_title": "Configure YouTube Discord Presence"},
   "content_scripts": [
-    {"matches": ["https://www.youtube.com/*"], "js": ["content.js"]},
-    {"matches": ["https://www.youtube.com/*"], "js": ["player.js"], "world": "MAIN"}
+    {"matches": ["https://www.youtube.com/*", "https://music.youtube.com/*"], "js": ["content.js"]},
+    {"matches": ["https://www.youtube.com/*", "https://music.youtube.com/*"], "js": ["player.js"], "world": "MAIN"}
   ]
 }
