@@ -11,12 +11,34 @@ test('active player metadata works away from watch page and follows track change
   const player={querySelector:()=>video,getVideoData:()=>track,classList:{contains:()=>ad}};
   vm.runInNewContext(fs.readFileSync(path.join(extension,'player.js'),'utf8'),{
     document:{getElementById:()=>player,addEventListener:()=>{}},location:{origin:'https://www.youtube.com',pathname:'/playlist'},
-    window:{postMessage:data=>sent.push(data)},setInterval:callback=>poll=callback
+    navigator:{},window:{postMessage:data=>sent.push(data)},setInterval:callback=>poll=callback
   });
   assert.equal(sent.at(-1).playing,true);assert.equal(sent.at(-1).title,track.title);assert.equal(sent.at(-1).id,track.video_id);
   track={video_id:'JEjNT2rI7TA',title:'Kerser - The Vibe',author:'TheKERSER'};poll();assert.equal(sent.at(-1).title,track.title);assert.equal(sent.at(-1).id,track.video_id);
   video.paused=true;poll();assert.equal(sent.at(-1).playing,false);
   video.paused=false;ad=true;poll();assert.equal(sent.at(-1).playing,false);
+});
+
+test('YouTube Music player metadata reports the active track from the music player URL', () => {
+  const sent=[];let poll;
+  const video={paused:false,ended:false,readyState:4,currentTime:42,duration:210,playbackRate:1};
+  const player={querySelector:()=>video,getVideoData:()=>undefined,classList:{contains:()=>false}};
+  const metadata={title:'Big Poppa (2005 Remaster)',artist:'The Notorious B.I.G.'};
+  vm.runInNewContext(fs.readFileSync(path.join(extension,'player.js'),'utf8'),{
+    document:{getElementById:()=>null,querySelector:()=>player,addEventListener:()=>{}},
+    location:{origin:'https://music.youtube.com',hostname:'music.youtube.com',href:'https://music.youtube.com/watch?v=aGellcYTmO8'},
+    navigator:{mediaSession:{metadata}},URL,globalThis:{navigator:{mediaSession:{metadata}}},
+    window:{postMessage:data=>sent.push(data)},setInterval:callback=>poll=callback
+  });
+  assert.equal(sent.at(-1).playing,true);
+  assert.equal(sent.at(-1).id,'aGellcYTmO8');
+  assert.equal(sent.at(-1).title,metadata.title);
+  assert.equal(sent.at(-1).channel,metadata.artist);
+  assert.equal(sent.at(-1).position,42);
+  metadata.title='Hypnotize';
+  metadata.artist='The Notorious B.I.G.';
+  poll();
+  assert.equal(sent.at(-1).title,'Hypnotize');
 });
 test('isolated content script forwards validated player snapshots without trusting foreign messages',()=>{
   const sent=[];let onMessage;

@@ -8,7 +8,7 @@ Lethal's YouTube bot shares the video currently playing in Brave as a Discord **
 
 Hush Connect is in development. It is still being built, and we look forward to sharing more when it is ready.
 
-This repository is a development copy. The existing installed extension and AlwaysUp service continue to use their original location. Preparing this repository does not move, re-pair, or restart that installation.
+This repository contains the extension and bridge source. Local pairing codes and runtime paths are created on each computer and are not included in the public repository.
 
 ## Requirements
 
@@ -29,15 +29,15 @@ Do not run a second bridge beside an existing installation: both use port 32145.
 
 `bridge/config.example.json` documents the local configuration shape. Real `bridge/config.json` and `runtime.txt` are generated locally and ignored by Git.
 
-## Automatic startup
+## Automatic startup on Windows
 
-The current installed copy already uses AlwaysUp with automatic delayed startup and crash recovery. Leave that entry pointed at its existing runtime until a deliberate migration is tested.
+First complete **Fresh setup** and run `Start.cmd` once to confirm the bridge connects to Discord. Then run `Install-Autostart.cmd`. This registers a Windows Task Scheduler task for the current user, starts the bridge when that user signs in, and retries up to three times after an unexpected exit. It does not run as administrator or store a Windows password.
 
-For a separate fresh installation, first verify manual operation. Then configure your service supervisor to run the Node executable with the absolute path to `bridge/server.js`, using the bridge folder as its working directory. Configure automatic startup and restart after failure. Do not create duplicate supervisor entries. Discord desktop must be running for activity to appear; the PC must stay on and awake.
+Discord desktop must be open in the same signed-in Windows session for the activity to appear. The PC must be on and awake. To remove automatic startup, run `Uninstall-Autostart.cmd`. This removes the scheduled task; it does not remove the extension pairing or local configuration.
 
 ## Development
 
-Run `npm test` for the six focused playback, timestamp, RPC, and authenticated local HTTP tests. Run `npm run check` for JavaScript syntax checks. No dependency installation is needed. If npm is unavailable, run `node --test bridge/test.js test/player.test.js` directly; syntax can be checked with `node --check` for each JavaScript file.
+Run `npm test` for the seven focused playback, timestamp, RPC, and authenticated local HTTP tests. Run `npm run check` for JavaScript syntax checks. No dependency installation is needed. If npm is unavailable, run `node --test bridge/test.js test/player.test.js` directly; syntax can be checked with `node --check` for each JavaScript file.
 
 | Location | Purpose |
 | --- | --- |
@@ -45,6 +45,7 @@ Run `npm test` for the six focused playback, timestamp, RPC, and authenticated l
 | `extension/content.js` | Validates and forwards playback snapshots |
 | `extension/background.js` | Sends paired updates to the local bridge |
 | `extension/options.*` | Local pairing and sharing controls |
+| `Install-Autostart.ps1`, `Uninstall-Autostart.ps1` | Current-user Windows Task Scheduler setup and removal |
 | `bridge/server.js` | Playback selection and local HTTP service |
 | `bridge/rpc.js` | Discord named-pipe RPC connection and recovery |
 | `bridge/test.js`, `test/player.test.js` | Offline verification with mock playback and local transports |
@@ -60,4 +61,4 @@ Run `npm test` for the six focused playback, timestamp, RPC, and authenticated l
 
 ## Repository privacy
 
-The repository is intended for private GitHub storage. `private: true` in `package.json` separately prevents accidental npm publication; GitHub repository visibility must also remain private. Review staged files and ignored configuration before pushing changes. Choose a license before sharing publicly; no license has been assumed.
+`private: true` in `package.json` prevents accidental npm publication; it does not make this GitHub repository private. Pairing codes, generated configuration and local runtime paths are ignored by Git. No reuse license has been added.

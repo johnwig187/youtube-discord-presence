@@ -6,7 +6,7 @@
     const video = player?.querySelector('video') || document.querySelector('video');
     let data;
     try { data = player?.getVideoData?.(); } catch { return; }
-    const media = navigator.mediaSession?.metadata;
+    const media = globalThis.navigator?.mediaSession?.metadata;
     const id = data?.video_id || new URL(location.href).searchParams.get('v');
     const valid = /^[\w-]{11}$/.test(id || '');
     const playing = valid && video && !video.paused && !video.ended && video.readyState >= 2 && !player?.classList.contains('ad-showing');
